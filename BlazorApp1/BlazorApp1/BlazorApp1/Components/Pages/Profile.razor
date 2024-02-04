@@ -1,0 +1,32 @@
+@page "/profile"
+@using BlazorApp1
+
+<h3>User Profile</h3>
+
+@if (userProfile != null)
+{
+    <p>Welcome, @userProfile.Email!</p>
+}
+else
+{
+    <p>Please sign in to view your profile.</p>
+}
+
+@code {
+
+    
+    private UserProfileModel userProfile;
+
+    protected override void OnInitialized()
+    {
+        // Fetch user profile data using authentication service or any other method
+        // For demonstration purposes, set a sample user profile
+        userProfile = new UserProfileModel
+        {
+            Email = "user@example.com",
+            // Add more properties as needed
+        };
+
+        base.OnInitialized();
+    }
+}

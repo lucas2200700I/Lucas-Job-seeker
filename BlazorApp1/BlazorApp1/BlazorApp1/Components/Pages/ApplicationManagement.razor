@@ -1,0 +1,41 @@
+@page "/manage-applications/{jobId}"
+@using BlazorApp1
+
+<h3>Manage Job Applications</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Applicant Name</th>
+            <th>Cover Letter</th>
+            <!-- Add other relevant columns -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var application in Model.Applications)
+        {
+            <tr>
+                <td>@application.ApplicantName</td>
+                <td>@application.CoverLetter</td>
+                <!-- Add other relevant columns -->
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public string JobId { get; set; }
+
+    [SupplyParameterFromForm]
+    public JobListing? Model { get; set; }
+
+    @inject IApplicationService ApplicationService
+    @inject JobListingService JobListingService
+    protected override void OnInitialized()
+    {
+        int jobId = int.Parse(JobId);
+        Model = JobListingService.GetJobListingById(jobId);
+        Model.Applications = ApplicationService.GetApplicationsForJob(jobId);
+    }
+}

@@ -1,0 +1,61 @@
+@page "/apply/{jobId}"
+@using BlazorApp1
+@inject NavigationManager NavigationManager
+@inject IApplicationService ApplicationService
+
+<h3>Apply for Job</h3>
+
+<EditForm Model="@application" OnValidSubmit="@SubmitApplication" FormName="applyForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <!-- Add form fields for application details -->
+    <div class="form-group">
+        <label>Name:</label>
+        <InputText @bind-Value="application.ApplicantName" class="form-control" />
+        <ValidationMessage For="@(() => application.ApplicantName)" />
+    </div>
+
+    <div class="form-group">
+        <label>Email:</label>
+        <InputText @bind-Value="application.ApplicantEmail" class="form-control" />
+        <ValidationMessage For="@(() => application.ApplicantEmail)" />
+    </div>
+
+    <div class="form-group">
+        <label>ResumeUrl:</label>
+        <InputText @bind-Value="application.ResumeUrl" class="form-control" />
+        <ValidationMessage For="@(() => application.ResumeUrl)" />
+    </div>
+
+    <div class="form-group">
+        <label>Cover letter:</label>
+        <InputText @bind-Value="application.CoverLetter" class="form-control" />
+        <ValidationMessage For="@(() => application.CoverLetter)" />
+    </div>
+    <!-- Add more fields as needed -->
+
+    <button type="submit" class="btn btn-primary">Submit Application</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string jobId { get; set; }
+
+    [SupplyParameterFromForm]
+    public Application? application { get; set; }
+    protected override void OnInitialized() => application ??= new();
+
+    private void SubmitApplication()
+    {
+        // Set jobId for the application
+        application.JobId = int.Parse(jobId);
+      
+
+        // Call the ApplyForJob method from ApplicationService
+        ApplicationService.ApplyForJob(application);
+
+        // Navigate to a success page or update the UI as needed
+        NavigationManager.NavigateTo("/manage-applications/"+jobId);
+    }
+}

@@ -1,0 +1,54 @@
+@page "/job-lists"
+@using BlazorApp1
+@using System.Text.Json
+@inject NavigationManager NavigationManager
+@inject JobListingService JobListingService
+
+<h3>Job Listings</h3>
+
+@if (jobListings.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Salary</th>
+                 <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var jobListing in jobListings)
+            {
+                <tr @key="jobListing.Id">
+                    <td>@jobListing.Title</td>
+                    <td>@jobListing.Description</td>
+                    <td>@jobListing.Location</td>
+                    <td>@jobListing.Salary</td>
+                    <td>
+                        <a href="apply/@jobListing.Id" class="btn btn-primary">Apply</a>
+                        <a href="manage-applications/@jobListing.Id" class="btn btn-info">Manage Applications</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No job listings available.</p>
+}
+
+@code {
+    private List<JobListing> jobListings;
+
+    protected override void OnInitialized()
+    {
+        // Fetch job listings when the page is initialized
+        jobListings = JobListingService.GetJobListings();
+        StateHasChanged();
+    }
+
+   
+}
